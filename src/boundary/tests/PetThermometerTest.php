@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-require __DIR__ . "/../lib/PetThermometer.php";
-
 use PHPUnit\Framework\TestCase;
 use Boundary\Lib\PetThermometer;
 
