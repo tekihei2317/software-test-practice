@@ -15,28 +15,22 @@ class KitchenScaleTest extends TestCase
     }
 
     // 境界値テスト
-    public function testマイナス1gのときにエラーが表示されること()
+    public function test境界値のテスト()
     {
-        $result = $this->scale->display(-1);
-        $this->assertEquals('EEEE', $result);
-    }
+        // どこで落ちたか分かりづらいので、1つにまとめるのはあまり良くなさそう
+        $testCases = [
+            [-1, 'EEEE'],
+            [0, 0],
+            [2000, 2000],
+            [2001, 'EEEE']
+        ];
 
-    public function test0gのときに重さが表示されること()
-    {
-        $result = $this->scale->display(0);
-        $this->assertEquals(0, $result);
-    }
-
-    public function test2000gのときに重さが表示されること()
-    {
-        $result = $this->scale->display(2000);
-        $this->assertEquals(2000, $result);
-    }
-
-    public function test2001gのときにエラーが表示されること()
-    {
-        $result = $this->scale->display(2001);
-        $this->assertEquals('EEEE', $result);
+        foreach ($testCases as [$input, $output]) {
+            $this->assertEquals(
+                $output,
+                $this->scale->display($input)
+            );
+        }
     }
 
     // 代表値テスト
