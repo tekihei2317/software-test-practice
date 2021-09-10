@@ -14,5 +14,8 @@
         "psr-4": {
             "": "src"
         }
-    }    
+    },
+    "require": {
+        "nesbot/carbon": "^2.53"
+    }
 }
