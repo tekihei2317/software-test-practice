@@ -14,23 +14,13 @@ class KitchenScaleTest extends TestCase
         $this->scale = new KitchenScale;
     }
 
-    // 境界値テスト
-    public function test境界値のテスト()
+    /**
+     * @dataProvider boundaryProvider
+     */
+    public function test境界値のテスト(int $weight, $output)
     {
         // どこで落ちたか分かりづらいので、1つにまとめるのはあまり良くなさそう
-        $testCases = [
-            [-1, 'EEEE'],
-            [0, 0],
-            [2000, 2000],
-            [2001, 'EEEE']
-        ];
-
-        foreach ($testCases as [$input, $output]) {
-            $this->assertEquals(
-                $output,
-                $this->scale->display($input)
-            );
-        }
+        $this->assertEquals($output, $this->scale->display($weight));
     }
 
     // 代表値テスト
@@ -50,5 +40,15 @@ class KitchenScaleTest extends TestCase
     {
         $result = $this->scale->display(2500);
         $this->assertEquals('EEEE', $result);
+    }
+
+    public function boundaryProvider(): array
+    {
+        return [
+            [-1, 'EEEE'],
+            [0, 0],
+            [2000, 2000],
+            [2001, 'EEEE']
+        ];
     }
 }
