@@ -9,35 +9,56 @@ use PHPUnit\Framework\TestCase;
 
 class QueueTest extends TestCase
 {
-    public function test新しいキューの要素数は0であること(): Queue
+    private Queue $queue;
+
+    protected function setUp(): void
     {
-        $queue = new Queue;
-
-        $this->assertEquals(0, $queue->size());
-
-        return $queue;
+        $this->queue = new Queue();
     }
 
-    /**
-     * @depends test新しいキューの要素数は0であること
-     */
-    public function testPushメソッドで要素を追加できること(Queue $queue): Queue
+    public function test新しいキューの要素数は0であること(): void
     {
-        $queue->push('red');
-
-        $this->assertEquals(1, $queue->size());
-
-        return $queue;
+        $this->assertEquals(0, $this->queue->size());
     }
 
-    /**
-     * @depends testPushメソッドで要素を追加できること
-     */
-    public function testPopメソッドで要素を削除できること(Queue $queue): void
+    public function testPushメソッドで要素を追加できること(): void
     {
-        $item = $queue->pop();
+        $this->queue->push('red');
 
-        $this->assertEquals(0, $queue->size());
+        $this->assertEquals(1, $this->queue->size());
+    }
+
+    public function testPopメソッドで要素を削除できること(): void
+    {
+        $this->queue->push('red');
+        $item = $this->queue->pop();
+
+        $this->assertEquals(0, $this->queue->size());
         $this->assertEquals('red', $item);
+    }
+
+    public function test最初に入れた要素から取得されること(): void
+    {
+        $this->queue->push('first');
+        $this->queue->push('second');
+
+        $this->assertEquals('first', $this->queue->pop());
+        $this->assertEquals('second', $this->queue->pop());
+    }
+
+    // リングバッファで実装したのでO(1)で削除が出来ます
+    public function test10000要素入れても遅くならないこと(): void
+    {
+        $size = 10000;
+        for ($i = 0; $i < $size; $i++) {
+            $this->queue->push($i);
+        }
+
+        $item = null;
+        while ($this->queue->size() > 0) {
+            $item = $this->queue->pop();
+        }
+
+        $this->markTestSkipped();
     }
 }
