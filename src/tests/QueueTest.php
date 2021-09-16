@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Error;
 use Lib\Queue;
 use PHPUnit\Framework\TestCase;
 
@@ -46,19 +47,24 @@ class QueueTest extends TestCase
         $this->assertEquals('second', $this->queue->pop());
     }
 
-    // リングバッファで実装したのでO(1)で削除が出来ます
-    public function test10000要素入れても遅くならないこと(): void
+    public function test最大要素数の数だけpushできること(): void
     {
-        $size = 10000;
-        for ($i = 0; $i < $size; $i++) {
+        for ($i = 0; $i < Queue::MAX_SIZE; $i++) {
             $this->queue->push($i);
         }
 
-        $item = null;
-        while ($this->queue->size() > 0) {
-            $item = $this->queue->pop();
+        $this->assertEquals(Queue::MAX_SIZE, $this->queue->size());
+    }
+
+    public function test最大要素数を超えると例外が発生すること(): void
+    {
+        for ($i = 0; $i < Queue::MAX_SIZE; $i++) {
+            $this->queue->push($i);
         }
 
-        $this->markTestSkipped();
+        $this->expectException(Error::class);
+        $this->expectExceptionMessage("これ以上追加することは出来ません");
+
+        $this->queue->push(0);
     }
 }

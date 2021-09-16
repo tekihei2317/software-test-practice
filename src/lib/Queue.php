@@ -8,7 +8,7 @@ class Queue
 {
     private array $items = [];
     private int $firstIndex = 0;
-    const MAX_SIZE = 10000;
+    public const MAX_SIZE = 10000;
 
     public function push($item)
     {
